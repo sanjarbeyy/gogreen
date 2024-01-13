@@ -25,6 +25,18 @@ resource "aws_lb_target_group" "webtier" {
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.vpc.id
+   health_check {
+    path                = "/"
+    interval            = 200
+    timeout             = 60
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    matcher             = "200" # has to be HTTP 200 or fails
+  }
+  stickiness {
+    type            = "lb_cookie"
+    cookie_duration = 120
+  }
 }
 
 
@@ -32,7 +44,7 @@ resource "aws_autoscaling_group" "webtier_asg" {
   name_prefix = var.prefix
   # launch_configuration = aws_launch_configuration.webtier.name
   min_size            = 2
-  max_size            = 6
+  max_size            = 4
   health_check_type   = "ELB"
   vpc_zone_identifier = [aws_subnet.public_subnets["Public_Sub_WEB_1A"].id, aws_subnet.public_subnets["Public_Sub_WEB_1B"].id]
   target_group_arns   = [aws_lb_target_group.webtier.arn]

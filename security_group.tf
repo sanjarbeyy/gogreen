@@ -45,6 +45,7 @@ module "web_security_group" {
           to_port     = 80
           protocol    = "tcp"
           cidr_blocks = ["0.0.0.0/0"]
+          security_groups = [module.alb_web_security_group.security_group_id["alb_web_sg"]]
         },
         {
           from_port   = 443
@@ -56,7 +57,7 @@ module "web_security_group" {
           from_port       = 22
           to_port         = 22
           protocol        = "tcp"
-          cidr_blocks     = ["0.0.0.0/0"]
+          cidr_blocks     = [join("", [aws_instance.bastion.private_ip, "/32"])]
           security_groups = [module.bastion_security_group.security_group_id["bastion_sg"]]
         }
       ]
@@ -83,18 +84,18 @@ module "app_security_group" {
       ingress_rules = [
         {
           priority        = 200
-          from_port       = 8080
-          to_port         = 8080
+          from_port       = 80
+          to_port         = 80
           protocol        = "tcp"
           cidr_blocks     = ["0.0.0.0/0"]
-          security_groups = [module.web_security_group.security_group_id["web_sg"]]
+          security_groups = [module.alb_app_security_group.security_group_id["alb_app_sg"]]
         },
         {
           from_port       = 22
           to_port         = 22
           protocol        = "tcp"
-          cidr_blocks     = ["0.0.0.0/0"]
-          security_groups = [module.bastion_security_group.security_group_id["bastion_sg"]]
+          cidr_blocks     = [join("", [aws_instance.bastion.private_ip, "/32"])]
+          # security_groups = [module.bastion_security_group.security_group_id["bastion_sg"]]
         },
 
       ]
@@ -155,7 +156,7 @@ module "alb_web_security_group" {
           to_port          = 80
           protocol         = "tcp"
           cidr_blocks      = ["0.0.0.0/0"]
-          ipv6_cidr_blocks = ["::/0"]
+          #   
         },
         {
           description      = "ingress rule for http"
@@ -164,7 +165,7 @@ module "alb_web_security_group" {
           to_port          = 443
           protocol         = "tcp"
           cidr_blocks      = ["0.0.0.0/0"]
-          ipv6_cidr_blocks = ["::/0"]
+          # ipv6_cidr_blocks = ["::/0"]
         }
       ],
       egress_rules = [
