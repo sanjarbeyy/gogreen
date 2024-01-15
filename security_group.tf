@@ -44,16 +44,19 @@ module "web_security_group" {
           from_port   = 80
           to_port     = 80
           protocol    = "tcp"
-          cidr_blocks = ["0.0.0.0/0"]
+          # cidr_blocks = ["0.0.0.0/0"]
           security_groups = [module.alb_web_security_group.security_group_id["alb_web_sg"]]
         },
         {
+          description = "for http"
+          priority = 210
           from_port   = 443
           to_port     = 443
           protocol    = "tcp"
           cidr_blocks = ["0.0.0.0/0"]
         },
         {
+          priority = 215
           from_port       = 22
           to_port         = 22
           protocol        = "tcp"
@@ -87,14 +90,14 @@ module "app_security_group" {
           from_port       = 80
           to_port         = 80
           protocol        = "tcp"
-          cidr_blocks     = ["0.0.0.0/0"]
+          # cidr_blocks     = ["0.0.0.0/0"]
           security_groups = [module.alb_app_security_group.security_group_id["alb_app_sg"]]
         },
         {
           from_port       = 22
           to_port         = 22
           protocol        = "tcp"
-          cidr_blocks     = [join("", [aws_instance.bastion.private_ip, "/32"])]
+          cidr_blocks     = [join("", [aws_instance.bastion.known_hosts, "/32"])]
           # security_groups = [module.bastion_security_group.security_group_id["bastion_sg"]]
         },
 
@@ -121,6 +124,7 @@ module "database_security_group" {
       description = "sg for db"
       ingress_rules = [
         {
+          priority = 400
           from_port       = 3306
           to_port         = 3306
           protocol        = "tcp"
@@ -132,7 +136,7 @@ module "database_security_group" {
         {
           from_port   = 0
           to_port     = 0
-          protocol    = "tcp"
+          protocol    = "-1"
           cidr_blocks = ["0.0.0.0/0"]
         }
       ]
@@ -156,11 +160,11 @@ module "alb_web_security_group" {
           to_port          = 80
           protocol         = "tcp"
           cidr_blocks      = ["0.0.0.0/0"]
-          #   
+          
         },
         {
           description      = "ingress rule for http"
-          priority         = 204
+          priority         = 225
           from_port        = 443
           to_port          = 443
           protocol         = "tcp"
@@ -195,7 +199,7 @@ module "alb_app_security_group" {
           from_port       = 80
           to_port         = 80
           protocol        = "tcp"
-          cidr_blocks     = ["0.0.0.0/0"]
+          # cidr_blocks     = ["0.0.0.0/0"]
           security_groups = [module.web_security_group.security_group_id["web_sg"]]
         }
       ],

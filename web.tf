@@ -21,11 +21,11 @@ resource "aws_key_pair" "webtier" {
 }
 
 resource "aws_lb_target_group" "webtier" {
-  name = "webtg"
+  name     = "webtg"
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.vpc.id
-   health_check {
+  health_check {
     path                = "/"
     interval            = 200
     timeout             = 60
