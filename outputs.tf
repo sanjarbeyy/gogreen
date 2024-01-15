@@ -10,6 +10,6 @@ output "application_alb" {
   value = aws_lb.apptier_alb.dns_name
 }
 
-output "database_endpoint" {
-  value = aws_db_instance.database_instance.address
-}
+# output "database_endpoint" {
+#   value = aws_db_instance.database_instance.address
+# }

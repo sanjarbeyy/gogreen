@@ -12,7 +12,7 @@ resource "aws_launch_template" "apptier" {
     }
   }
 
-  user_data = filebase64("${path.module}/s.sh")
+  user_data = filebase64("s.sh")
 }
 
 resource "aws_key_pair" "apptier" {
