@@ -30,7 +30,7 @@ resource "aws_db_instance" "database_instance" {
   username                = "gogreen"
   password                = random_password.database_password.result
   db_subnet_group_name    = aws_db_subnet_group.database_subnet_group.id
-  vpc_security_group_ids  = [module.database_security_group.security_group_id["db_sg"]]
+  vpc_security_group_ids  = [module.db_security_group.security_group_id["db_sg"]]
   allocated_storage       = 20
   skip_final_snapshot     = true
   backup_retention_period = 0

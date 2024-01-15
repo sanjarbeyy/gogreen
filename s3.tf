@@ -1,8 +1,8 @@
 resource "aws_s3_bucket" "gogreenbucketibragimov" {
-  bucket = "gogreenbucketibragimov"
+  bucket = "gobucketibragimov123"
 
   tags = {
-    Name        = "gogreenbucketibragimov"
+    Name        = "gobucketibragimov123"
     Environment = "APP"
   }
 }
