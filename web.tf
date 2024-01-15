@@ -1,5 +1,5 @@
 resource "aws_launch_template" "webtier" {
-  name_prefix            = var.prefix
+  name_prefix            = "${var.prefix}webec2"
   image_id               = data.aws_ami.amazon-linux2.id
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.webtier.key_name
@@ -21,10 +21,10 @@ resource "aws_key_pair" "webtier" {
 }
 
 resource "aws_lb_target_group" "webtier" {
-  name     = "webtg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.vpc.id
+  name_prefix = "${var.prefix}webtg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.vpc.id
   health_check {
     path                = "/"
     interval            = 200
@@ -41,7 +41,7 @@ resource "aws_lb_target_group" "webtier" {
 
 
 resource "aws_autoscaling_group" "webtier_asg" {
-  name_prefix = var.prefix
+  name_prefix = "${var.prefix}webasg"
   # launch_configuration = aws_launch_configuration.webtier.name
   min_size            = 2
   max_size            = 4
@@ -76,7 +76,7 @@ resource "aws_autoscaling_attachment" "web_attach" {
 }
 
 resource "aws_lb" "webtier_alb" {
-  #   name_prefix        = var.prefix
+  name_prefix        = "${var.prefix}webalb"
   internal           = false
   load_balancer_type = "application"
   idle_timeout       = 65

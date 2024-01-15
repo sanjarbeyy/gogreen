@@ -1,5 +1,5 @@
 resource "aws_launch_template" "apptier" {
-  name_prefix            = var.prefix
+  name_prefix            = "${var.prefix}appec2"
   image_id               = data.aws_ami.amazon-linux2.id
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.apptier.key_name
@@ -21,11 +21,10 @@ resource "aws_key_pair" "apptier" {
 }
 
 resource "aws_lb_target_group" "apptier_tg" {
-  # name_prefix = var.prefix
-  name     = "apptg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.vpc.id
+  name_prefix = "${var.prefix}apptg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.vpc.id
   health_check {
     path                = "/"
     interval            = 200
@@ -41,7 +40,7 @@ resource "aws_lb_target_group" "apptier_tg" {
 }
 
 resource "aws_autoscaling_group" "apptier_asg" {
-  name_prefix = var.prefix
+  name_prefix = "${var.prefix}appasg"
   #   launch_configuration = aws_launch_configuration.apptier.name
   min_size            = 2
   max_size            = 4
@@ -76,7 +75,7 @@ resource "aws_autoscaling_attachment" "app_attach" {
 }
 
 resource "aws_lb" "apptier_alb" {
-  name_prefix        = var.prefix
+  name_prefix        = "${var.prefix}weblb"
   internal           = true
   load_balancer_type = "application"
   idle_timeout       = 65

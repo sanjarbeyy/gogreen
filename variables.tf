@@ -20,7 +20,7 @@ variable "private_subnets" {
 }
 variable "prefix" {
   type    = string
-  default = "Green"
+  default = ""
 
 }
 variable "nat-rta" {
