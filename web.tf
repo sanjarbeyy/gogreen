@@ -3,7 +3,7 @@ resource "aws_launch_template" "webtier" {
   image_id               = data.aws_ami.amazon-linux2.id
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.webtier.key_name
-  vpc_security_group_ids = [module.web_security_group.security_group_id["web_sg"]]
+  vpc_security_group_ids = [module.web_security_group1.security_group_id["web_ec2_sg"]]
   tag_specifications {
     resource_type = "instance"
 
@@ -20,7 +20,7 @@ resource "aws_key_pair" "webtier" {
   public_key = file("~/.ssh/cloud2024.pem.pub")
 }
 
-resource "aws_lb_target_group" "webtier" {
+resource "aws_lb_target_group" "webtier_tg" {
   name_prefix = "${var.prefix}webtg"
   port        = 80
   protocol    = "HTTP"
@@ -47,7 +47,7 @@ resource "aws_autoscaling_group" "webtier_asg" {
   max_size            = 4
   health_check_type   = "ELB"
   vpc_zone_identifier = [aws_subnet.public_subnets["Public_Sub_WEB_1A"].id, aws_subnet.public_subnets["Public_Sub_WEB_1B"].id]
-  target_group_arns   = [aws_lb_target_group.webtier.arn]
+  target_group_arns   = [aws_lb_target_group.webtier_tg.arn]
 
   launch_template {
     id      = aws_launch_template.webtier.id
@@ -72,7 +72,7 @@ resource "aws_autoscaling_policy" "webtier_asg_policy" {
 # Create a new ALB Target Group attachment
 resource "aws_autoscaling_attachment" "web_attach" {
   autoscaling_group_name = aws_autoscaling_group.webtier_asg.id
-  lb_target_group_arn    = aws_lb_target_group.webtier.arn
+  lb_target_group_arn    = aws_lb_target_group.webtier_tg.arn
 }
 
 resource "aws_lb" "webtier_alb" {
@@ -80,7 +80,7 @@ resource "aws_lb" "webtier_alb" {
   internal           = false
   load_balancer_type = "application"
   idle_timeout       = 65
-  security_groups    = [module.alb_web_security_group.security_group_id["alb_web_sg"]]
+  security_groups    = [module.web_security_group.security_group_id["alb_web_sg"]]
   subnets            = [aws_subnet.public_subnets["Public_Sub_WEB_1A"].id, aws_subnet.public_subnets["Public_Sub_WEB_1B"].id]
 }
 
@@ -91,7 +91,7 @@ resource "aws_lb_listener" "webtier_alb_listener_1" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.webtier.arn
+    target_group_arn = aws_lb_target_group.webtier_tg.arn
   }
 }
 #     type = "redirect"

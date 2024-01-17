@@ -20,7 +20,7 @@ resource "aws_cloudwatch_metric_alarm" "http_400_errors_alarm" {
   actions_enabled     = true
 
   dimensions = {
-    load_balancer_name = aws_lb.apptier_alb.name
+    load_balancer_name = aws_lb.webtier_alb.name
   }
 
   alarm_actions = ["arn:aws:sns:us-west-2:822553477440:MySNSTopic"]

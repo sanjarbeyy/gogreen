@@ -3,7 +3,7 @@ resource "aws_launch_template" "apptier" {
   image_id               = data.aws_ami.amazon-linux2.id
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.apptier.key_name
-  vpc_security_group_ids = [module.app_security_group.security_group_id["app_sg"]]
+  vpc_security_group_ids = [module.app_security_group1.security_group_id["app_ec2_sg"]]
   tag_specifications {
     resource_type = "instance"
 
@@ -75,11 +75,11 @@ resource "aws_autoscaling_attachment" "app_attach" {
 }
 
 resource "aws_lb" "apptier_alb" {
-  name_prefix        = "${var.prefix}weblb"
+  name_prefix        = "${var.prefix}applb"
   internal           = true
   load_balancer_type = "application"
   idle_timeout       = 65
-  security_groups    = [module.alb_app_security_group.security_group_id["alb_app_sg"]]
+  security_groups    = [module.app_security_group.security_group_id["alb_app_sg"]]
   subnets            = [aws_subnet.private_subnets["Private_Sub_APP_1B"].id, aws_subnet.private_subnets["Private_Sub_APP_1A"].id]
 }
 

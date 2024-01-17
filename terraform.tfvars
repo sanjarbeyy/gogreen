@@ -1,35 +1,41 @@
 public_subnets = {
   Public_Sub_WEB_1A = {
-    name              = "Public_Sub_WEB_1A",
-    cidr_block        = "10.0.1.0/24"
-    availability_zone = "us-west-2a"
+    name                    = "Public_Sub_WEB_1A",
+    cidr_block              = "10.0.1.0/24"
+    availability_zone       = "us-west-2a"
+    map_public_ip_on_launch = true
   },
   Public_Sub_WEB_1B = {
-    name              = "Public_Sub_WEB_1B",
-    cidr_block        = "10.0.2.0/24"
-    availability_zone = "us-west-2b"
+    name                    = "Public_Sub_WEB_1B",
+    cidr_block              = "10.0.2.0/24"
+    availability_zone       = "us-west-2b"
+    map_public_ip_on_launch = true
   },
 }
 private_subnets = {
   Private_Sub_APP_1A = {
-    name              = "Private_Sub_APP_1A",
-    cidr_block        = "10.0.3.0/24"
-    availability_zone = "us-west-2a"
+    name                    = "Private_Sub_APP_1A",
+    cidr_block              = "10.0.3.0/24"
+    availability_zone       = "us-west-2a"
+    map_public_ip_on_launch = false
   },
   Private_Sub_APP_1B = {
-    name              = "Private_Sub_APP_1B",
-    cidr_block        = "10.0.4.0/24"
-    availability_zone = "us-west-2b"
+    name                    = "Private_Sub_APP_1B",
+    cidr_block              = "10.0.4.0/24"
+    availability_zone       = "us-west-2b"
+    map_public_ip_on_launch = false
   },
   Private_Sub_DB_1A = {
-    name              = "Private_Sub_DB_1A",
-    cidr_block        = "10.0.5.0/24"
-    availability_zone = "us-west-2a"
+    name                    = "Private_Sub_DB_1A",
+    cidr_block              = "10.0.5.0/24"
+    availability_zone       = "us-west-2a"
+    map_public_ip_on_launch = false
   },
   Private_Sub_DB_1B = {
-    name              = "Private_Sub_DB_1B",
-    cidr_block        = "10.0.6.0/24"
-    availability_zone = "us-west-2b"
+    name                    = "Private_Sub_DB_1B",
+    cidr_block              = "10.0.6.0/24"
+    availability_zone       = "us-west-2b"
+    map_public_ip_on_launch = false
   }
 }
 nat-rta = {
