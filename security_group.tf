@@ -1,7 +1,6 @@
 module "bastion_security_group" {
-  source  = "app.terraform.io/sanjarbey/security-groups/aws"
-  version = "4.0.0"
-  vpc_id  = aws_vpc.vpc.id
+  source = "./modules/security_groups"
+  vpc_id = aws_vpc.vpc.id
   security_groups = {
     "bastion_sg" : {
       description = "Security group for bastion host"
@@ -30,9 +29,8 @@ module "bastion_security_group" {
 }
 
 module "web_security_group" {
-  source  = "app.terraform.io/sanjarbey/security-groups/aws"
-  version = "4.0.0"
-  vpc_id  = aws_vpc.vpc.id
+  source = "./modules/security_groups"
+  vpc_id = aws_vpc.vpc.id
   security_groups = {
     "alb_web_sg" : {
       description = "Security group for web load balancer"
@@ -68,9 +66,8 @@ module "web_security_group" {
 }
 
 module "web_security_group1" {
-  source  = "app.terraform.io/sanjarbey/security-groups/aws"
-  version = "4.0.0"
-  vpc_id  = aws_vpc.vpc.id
+  source = "./modules/security_groups"
+  vpc_id = aws_vpc.vpc.id
   security_groups = {
     "web_ec2_sg" : {
       description = "Security group for web servers"
@@ -91,7 +88,7 @@ module "web_security_group1" {
           to_port     = 22
           protocol    = "tcp"
           #cidr_blocks     = ["0.0.0.0/0"]
-          cidr_blocks     = [join("", [aws_instance.bastion.private_ip, "/32"])]
+          # cidr_blocks     = [join("", [aws_instance.bastion.private_ip, "/32"])]
           security_groups = [module.bastion_security_group.security_group_id["bastion_sg"]]
         },
         {
@@ -117,8 +114,7 @@ module "web_security_group1" {
 }
 
 module "app_security_group" {
-  source  = "app.terraform.io/sanjarbey/security-groups/aws"
-  version = "4.0.0"
+  source = "./modules/security_groups"
 
   vpc_id = aws_vpc.vpc.id
   security_groups = {
@@ -147,8 +143,7 @@ module "app_security_group" {
   }
 }
 module "app_security_group1" {
-  source  = "app.terraform.io/sanjarbey/security-groups/aws"
-  version = "4.0.0"
+  source = "./modules/security_groups"
 
   vpc_id = aws_vpc.vpc.id
   security_groups = {
@@ -169,7 +164,8 @@ module "app_security_group1" {
           from_port   = 22
           to_port     = 22
           protocol    = "tcp"
-          cidr_blocks = [join("", [aws_instance.bastion.private_ip, "/32"])]
+          # cidr_blocks = [join("", [aws_instance.bastion.private_ip, "/32"])]
+          security_groups = [module.bastion_security_group.security_group_id["bastion_sg"]]
         }
       ],
       egress_rules = [
@@ -185,8 +181,7 @@ module "app_security_group1" {
   }
 }
 module "db_security_group" {
-  source  = "app.terraform.io/sanjarbey/security-groups/aws"
-  version = "4.0.0"
+  source = "./modules/security_groups"
 
   vpc_id = aws_vpc.vpc.id
   security_groups = {

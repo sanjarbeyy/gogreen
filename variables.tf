@@ -31,7 +31,7 @@ variable "nat-rta" {
   default = {
   }
 }
-# variable "security-groups" {
+# variable "security_groups" {
 #   description = "A map of security groups with their rules"
 #   type = map(object({
 #     description = string

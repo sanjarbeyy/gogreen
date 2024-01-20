@@ -2,7 +2,8 @@ resource "aws_launch_template" "apptier" {
   name_prefix            = "${var.prefix}appec2"
   image_id               = data.aws_ami.amazon-linux2.id
   instance_type          = "t2.micro"
-  key_name               = aws_key_pair.apptier.key_name
+  key_name = var.key_name
+  # key_name               = aws_key_pair.apptier.key_name
   vpc_security_group_ids = [module.app_security_group1.security_group_id["app_ec2_sg"]]
   tag_specifications {
     resource_type = "instance"
@@ -15,10 +16,10 @@ resource "aws_launch_template" "apptier" {
   user_data = filebase64("s.sh")
 }
 
-resource "aws_key_pair" "apptier" {
-  key_name   = "apptier-key"
-  public_key = file("~/.ssh/cloud2024.pem.pub")
-}
+# resource "aws_key_pair" "apptier" {
+#   key_name   = "apptier-key"
+#   public_key = file("~/.ssh/cloud2024.pem.pub")
+# }
 
 resource "aws_lb_target_group" "apptier_tg" {
   name_prefix = "${var.prefix}apptg"
